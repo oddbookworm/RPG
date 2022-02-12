@@ -1,8 +1,8 @@
 from numpy import character
 import pygame as pg
-from gameCharacter import GameCharacter
-from gameObject import GameObject
-from player import Player
+from lib.gameCharacter import GameCharacter
+from lib.gameObject import GameObject
+from lib.player import Player
 
 def update_screen():
     screen.fill(black)

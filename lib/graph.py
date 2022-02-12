@@ -1,6 +1,14 @@
 from collections import defaultdict
 from copy import deepcopy
 
+"""
+I got the majority of this code in the StackOverflow answer at
+https://stackoverflow.com/a/30747003. I tweaked the code to handle
+nodes without any connections and I added a method to find the
+largest continuous subgraph (has a bug for specific conditions
+in directed graphs, and could probably use a lot of optimization) 
+"""
+
 class Graph:
     def __init__(self, connections, directed = False):
         self._graph = defaultdict(set)
@@ -48,8 +56,11 @@ class Graph:
         return None
 
     def largest_subgraph(self):
-        # there is a bug that a single edge coming into a directed network isn't detected properly
-        # probably heavily optimizable
+        """
+        there is a bug that a single edge coming into a directed 
+        network isn't detected properly and probably heavily 
+        optimizable
+        """
         print("Identifying largest subgraph")
         networks = []
         all_nodes = list(self._graph)

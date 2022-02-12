@@ -1,7 +1,7 @@
 from prng import prng
-from ... import graph
-from pprint import PrettyPrinter
+from graph import Graph
 from worldSpace import WorldSpace
+from pprint import PrettyPrinter
 
 class Dungeon(WorldSpace):
     def __init__(self, width, height, num_rooms):
