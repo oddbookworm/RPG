@@ -1,4 +1,7 @@
-from gameCharacter import GameCharacter
+try:
+    from gameCharacter import GameCharacter
+except ModuleNotFoundError:
+    from .gameCharacter import GameCharacter
 
 class Player(GameCharacter):
     def __init__(self, **kwargs):

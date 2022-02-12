@@ -1,4 +1,7 @@
-from cell import Cell
+try:
+    from cell import Cell
+except ModuleNotFoundError:
+    from .cell import Cell
 from enum import Enum, auto
 
 class AutoName(Enum):

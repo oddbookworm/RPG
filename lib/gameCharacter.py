@@ -1,5 +1,8 @@
 import pygame as pg
-from gameObject import GameObject
+try:
+    from gameObject import GameObject
+except ModuleNotFoundError:
+    from .gameObject import GameObject
 
 #     def move(self, new_location):
 #         """

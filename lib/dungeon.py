@@ -1,6 +1,11 @@
-from prng import prng
-from graph import Graph
-from worldSpace import WorldSpace
+try:
+    from prng import prng
+    from graph import Graph
+    from worldSpace import WorldSpace
+except ModuleNotFoundError:
+    from .prng import prng
+    from .graph import Graph
+    from .worldSpace import WorldSpace
 from pprint import PrettyPrinter
 
 class Dungeon(WorldSpace):
