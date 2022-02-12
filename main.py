@@ -1,4 +1,3 @@
-from numpy import character
 import pygame as pg
 from lib.gameCharacter import GameCharacter
 from lib.gameObject import GameObject
