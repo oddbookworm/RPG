@@ -15,10 +15,10 @@ class RoomType(AutoName):
     CUSTOM = auto()
 
 class Room:
-    def __init__(self, type: RoomType, size: tuple[int]):
+    def __init__(self, room_type: RoomType, size: tuple[int]):
         """
-        type: one of the values from the RoomType Enum
+        room_type: one of the values from the RoomType Enum
         size: tuple of pixels (width, height)
         """
-        self.type = type
+        self.type = room_type
         self.size = size
