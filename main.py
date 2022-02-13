@@ -2,9 +2,12 @@ import pygame as pg
 from lib.gameCharacter import GameCharacter
 from lib.gameObject import GameObject
 from lib.player import Player
+from lib.worldSpace import WorldSpace
+from lib.room import RoomType
 
 def update_screen():
     screen.fill(black)
+    world_space.draw(screen)
     for object in objects:
         object.draw(screen)
     player.draw(screen)
@@ -47,6 +50,14 @@ def create_objects():
 
     return object_list, player
 
+def create_space():
+    space = WorldSpace((320, 320), tile_size)
+    space.create_room((0, 0), (64, 64), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
+    space.create_room((64, 0), (64, 64), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
+    space.create_room((0, 64), (64, 64), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
+    space.create_room((180, 220), (160, 160), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
+    return space
+
 if __name__ == "__main__":
     # write function to retrieve from a settings file
     pg.init()
@@ -57,6 +68,7 @@ if __name__ == "__main__":
     black = (255, 0, 0)
 
     (objects, player) = create_objects()
+    world_space = create_space()
 
     main()
 

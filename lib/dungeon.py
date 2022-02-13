@@ -9,8 +9,8 @@ except ModuleNotFoundError:
 from pprint import PrettyPrinter
 
 class Dungeon(WorldSpace):
-    def __init__(self, width, height, num_rooms):
-        super().__init__(width, height)
+    def __init__(self, size, num_rooms):
+        super().__init__(size)
         self.num_rooms = num_rooms
 
     
