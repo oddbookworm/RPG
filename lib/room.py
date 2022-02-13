@@ -20,5 +20,7 @@ class Room:
         room_type: one of the values from the RoomType Enum
         size: tuple of pixels (width, height)
         """
-        self.type = room_type
+        self.room_type = room_type
         self.size = size
+
+        
