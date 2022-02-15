@@ -33,6 +33,11 @@ class Room:
         self.rect = self.image.get_rect()
 
     def create_room(self, floor_texture, tile_size, seed):
+        """
+        floor_texture: path to a texture
+        tile_size: int of tile size
+        seed: only used for random rooms. Use this to duplicate a buggy room
+        """
         self.seed = seed
         if self.room_type == RoomType.RECTANGLE:
             self.generate_rect_room(floor_texture, tile_size)
@@ -50,27 +55,6 @@ class Room:
         screen.blit(self.image, self.rect)
         if self.room_type == RoomType.ROUND:
             pg.draw.ellipse(screen, (0, 255, 0), self.rect, 3)
-
-    # def is_corner(self, cell, cells: list[Cell], tile_size):
-    #     horiz = 0
-    #     vert = 0
-    #     for test_cell in cells:
-    #         if test_cell == cell:
-    #             continue
-    #         else:
-    #             if test_cell.pos == (cell.pos[0] + cell.size[0], cell.pos[1]):
-    #                 horiz += 1
-    #             elif test_cell.pos == (cell.pos[0] - cell.size[0], cell.pos[1]):
-    #                 horiz += 1
-    #             elif test_cell.pos == (cell.pos[0], cell.pos[1] + cell.size[1]):
-    #                 vert += 1
-    #             elif test_cell.pos == (cell.pos[0], cell.pos[1] - cell.size[1]):
-    #                 vert += 1
-        
-    #     if vert == 1 and horiz == 1:
-    #         return True
-    #     else:
-    #         return False
 
     def generate_rect_room(self, floor_texture, tile_size):
         num_horiz_cells = self.size[0] // tile_size
@@ -113,7 +97,7 @@ class Room:
                                 skipping = True
 
     def generate_random_room(self, floor_texture, tile_size):
-        random_room = RandomRoom(self.size, tile_size, prob_floor = 0.7, seed = self.seed)
+        random_room = RandomRoom(self.size, tile_size, prob_floor = 0.8, seed = self.seed)
         positions = random_room.floors
         size = (tile_size, tile_size)
         for pos in positions:

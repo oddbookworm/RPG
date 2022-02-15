@@ -102,13 +102,10 @@ class RandomRoom:
             added_floors = []
             added_walls = []
             i += 1
-            change = False
             for cell in floors:
                 adjacent = self.getAdjacentCells(cell)
                 adjacentFloors = list(set(adjacent).intersection(set(floors)))
                 if len(adjacentFloors) < 4:
-                    # walls.append(cell)
-                    # floors.remove(cell)
                     added_walls.append(cell)
                     number_changes += 1
             
@@ -116,8 +113,6 @@ class RandomRoom:
                 adjacent = self.getAdjacentCells(cell)
                 adjacentFloors = list(set(adjacent).intersection(set(floors)))
                 if len(adjacentFloors) > 6:
-                    # floors.append(cell)
-                    # walls.remove(cell)
                     added_floors.append(cell)
                     number_changes += 1
             

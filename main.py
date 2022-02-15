@@ -16,6 +16,7 @@ def update_screen():
 def main():
     clock = pg.time.Clock()
 
+    fullscreen = False
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -24,6 +25,13 @@ def main():
             if event.type == pg.KEYDOWN:
                 if event.key in [pg.K_LSHIFT, pg.K_RSHIFT]:
                     player.speed *= 1.75
+
+                if event.key == pg.K_F11:
+                    if fullscreen:
+                        screen = pg.display.set_mode((win_width, win_height))
+                    else:
+                        screen = pg.display.set_mode((win_width, win_height), pg.FULLSCREEN)
+                    fullscreen = not fullscreen
             
             if event.type == pg.KEYUP:
                 if event.key in [pg.K_LSHIFT, pg.K_RSHIFT]:
@@ -46,22 +54,29 @@ def main():
 def create_objects():
     object_list = []
     default_speed = 3.7 * tile_size / fps # speed of 3.7 tiles per second
-    player = Player(texture = "assets/knight_idle_anim_f0.png", pos = (32, 32), width = 32, height = 32, speed = default_speed)
+    ptex = "assets/knight_idle_anim_f0.png"
+    player = Player(texture = ptex, pos = (32, 32), width = 32, height = 32, 
+                    speed = default_speed)
 
     return object_list, player
 
 def create_space():
-    space = WorldSpace((640, 640), tile_size)
-    space.create_room((0, 0), (640, 160), RoomType.RECTANGLE, "assets/floor_1.png")
-    space.create_room((0, 160), (640, 160), RoomType.ROUND, "assets/floor_1.png")
-    space.create_room((0, 320), (640, 320), RoomType.RANDOM, "assets/floor_1.png")
+    space = WorldSpace((win_width, win_height), tile_size)
+    space.create_room((0, 0), (win_width, win_height // 4), 
+                        RoomType.RECTANGLE, "assets/floor_1.png")
+    space.create_room((0, win_height // 4), (win_width, win_height // 4),
+                        RoomType.ROUND, "assets/floor_1.png")
+    space.create_room((0, win_height // 2), (win_width, win_height // 2),
+                        RoomType.RANDOM, "assets/floor_1.png")
     return space
 
 if __name__ == "__main__":
     # write function to retrieve from a settings file
     pg.init()
 
-    screen = pg.display.set_mode((640, 640))
+    win_width = 1280
+    win_height = 640
+    screen = pg.display.set_mode((win_width, win_height))
     tile_size = 32
     fps = 120
     black = (255, 0, 0)
