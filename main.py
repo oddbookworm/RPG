@@ -45,7 +45,7 @@ def main():
 
 def create_objects():
     object_list = []
-    default_speed = 3.7 * tile_size / fps # speed of 1.5 tiles per second
+    default_speed = 3.7 * tile_size / fps # speed of 3.7 tiles per second
     player = Player(texture = "assets/knight_idle_anim_f0.png", pos = (32, 32), width = 32, height = 32, speed = default_speed)
 
     return object_list, player
