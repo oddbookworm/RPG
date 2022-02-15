@@ -10,5 +10,9 @@ def prng(mySeed, number_values):
     return [random() for _ in range(number_values)]
 
 if __name__ == "__main__":
-    prng(12012)
+    randoms = prng(12012, 1000)
 
+    first = [r for r in randoms if r <= 0.55]
+    second = [r for r in randoms if r > 0.55]
+
+    print(len(first) / (len(first) + len(second)))

@@ -12,10 +12,11 @@ class WorldSpace:
         self.image = pg.Surface(self.size, pg.SRCALPHA, 32).convert_alpha()
         self.image.fill((0, 0, 0, 0))
         self.rect = self.image.get_rect()
+        self.tile_size = tile_size
 
-    def create_room(self, pos, size, room_type, floor_texture, tile_size):
+    def create_room(self, pos, size, room_type, floor_texture, seed = None):
         room = Room(room_type, size)
-        room.create_room(floor_texture, tile_size)
+        room.create_room(floor_texture, self.tile_size, seed = seed)
         self.rooms.append([room, pos])
 
     def draw(self, screen, space_pos = None):

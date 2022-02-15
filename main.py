@@ -52,8 +52,9 @@ def create_objects():
 
 def create_space():
     space = WorldSpace((640, 640), tile_size)
-    space.create_room((352, 0), (128, 256), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
-    space.create_room((0, 0), (320, 640), RoomType.ROUND, "assets/floor_1.png", tile_size)
+    space.create_room((0, 0), (640, 160), RoomType.RECTANGLE, "assets/floor_1.png")
+    space.create_room((0, 160), (640, 160), RoomType.ROUND, "assets/floor_1.png")
+    space.create_room((0, 320), (640, 320), RoomType.RANDOM, "assets/floor_1.png")
     return space
 
 if __name__ == "__main__":

@@ -4,8 +4,10 @@ from numpy import tile
 import pygame as pg
 try:
     from cell import Cell
+    from randomRoom import RandomRoom
 except ModuleNotFoundError:
     from .cell import Cell
+    from .randomRoom import RandomRoom
 
 class AutoName(Enum):
     def _generate_next_value_(name, start, count, last_values):
@@ -30,12 +32,16 @@ class Room:
         self.image.fill((0, 0, 0, 0))
         self.rect = self.image.get_rect()
 
-    def create_room(self, floor_texture, tile_size):
+    def create_room(self, floor_texture, tile_size, seed):
+        self.seed = seed
         if self.room_type == RoomType.RECTANGLE:
             self.generate_rect_room(floor_texture, tile_size)
         
         if self.room_type == RoomType.ROUND:
             self.generate_round_room(floor_texture, tile_size)
+
+        if self.room_type == RoomType.RANDOM:
+            self.generate_random_room(floor_texture, tile_size)
 
     def draw(self, pos, screen: pg.Surface):
         self.rect.topleft = pos
@@ -45,26 +51,26 @@ class Room:
         if self.room_type == RoomType.ROUND:
             pg.draw.ellipse(screen, (0, 255, 0), self.rect, 3)
 
-    def is_corner(self, cell, cells: list[Cell], tile_size):
-        horiz = 0
-        vert = 0
-        for test_cell in cells:
-            if test_cell == cell:
-                continue
-            else:
-                if test_cell.pos == (cell.pos[0] + cell.size[0], cell.pos[1]):
-                    horiz += 1
-                elif test_cell.pos == (cell.pos[0] - cell.size[0], cell.pos[1]):
-                    horiz += 1
-                elif test_cell.pos == (cell.pos[0], cell.pos[1] + cell.size[1]):
-                    vert += 1
-                elif test_cell.pos == (cell.pos[0], cell.pos[1] - cell.size[1]):
-                    vert += 1
+    # def is_corner(self, cell, cells: list[Cell], tile_size):
+    #     horiz = 0
+    #     vert = 0
+    #     for test_cell in cells:
+    #         if test_cell == cell:
+    #             continue
+    #         else:
+    #             if test_cell.pos == (cell.pos[0] + cell.size[0], cell.pos[1]):
+    #                 horiz += 1
+    #             elif test_cell.pos == (cell.pos[0] - cell.size[0], cell.pos[1]):
+    #                 horiz += 1
+    #             elif test_cell.pos == (cell.pos[0], cell.pos[1] + cell.size[1]):
+    #                 vert += 1
+    #             elif test_cell.pos == (cell.pos[0], cell.pos[1] - cell.size[1]):
+    #                 vert += 1
         
-        if vert == 1 and horiz == 1:
-            return True
-        else:
-            return False
+    #     if vert == 1 and horiz == 1:
+    #         return True
+    #     else:
+    #         return False
 
     def generate_rect_room(self, floor_texture, tile_size):
         num_horiz_cells = self.size[0] // tile_size
@@ -100,12 +106,16 @@ class Room:
                         if collide:
                             pos = (col * tile_size, row * tile_size)
                             size = (tile_size, tile_size)
-                            # self.cells.append(Cell(self.image, floor_texture, size,
-                            #                 pos, True))
                             count += 1
                             if count > 1:
                                 self.cells.append(Cell(self.image, floor_texture, size,
                                             pos, True))
                                 skipping = True
 
-
+    def generate_random_room(self, floor_texture, tile_size):
+        random_room = RandomRoom(self.size, tile_size, prob_floor = 0.7, seed = self.seed)
+        positions = random_room.floors
+        size = (tile_size, tile_size)
+        for pos in positions:
+            pos = (pos[0] * tile_size, pos[1] * tile_size)
+            self.cells.append(Cell(self.image, floor_texture, size, pos, True))
