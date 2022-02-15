@@ -3,7 +3,7 @@ from lib.gameCharacter import GameCharacter
 from lib.gameObject import GameObject
 from lib.player import Player
 from lib.worldSpace import WorldSpace
-from lib.room import RoomType
+from lib.room import Room, RoomType
 
 def update_screen():
     screen.fill(black)
@@ -23,11 +23,11 @@ def main():
 
             if event.type == pg.KEYDOWN:
                 if event.key in [pg.K_LSHIFT, pg.K_RSHIFT]:
-                    player.speed *= 2
+                    player.speed *= 1.75
             
             if event.type == pg.KEYUP:
                 if event.key in [pg.K_LSHIFT, pg.K_RSHIFT]:
-                    player.speed /= 2
+                    player.speed /= 1.75
 
         pressed = pg.key.get_pressed()
         if pressed[pg.K_UP]:
@@ -45,17 +45,15 @@ def main():
 
 def create_objects():
     object_list = []
-    default_speed = 5 * tile_size / fps # speed of 5 tiles per second
+    default_speed = 3.7 * tile_size / fps # speed of 1.5 tiles per second
     player = Player(texture = "assets/knight_idle_anim_f0.png", pos = (32, 32), width = 32, height = 32, speed = default_speed)
 
     return object_list, player
 
 def create_space():
-    space = WorldSpace((320, 320), tile_size)
-    space.create_room((0, 0), (64, 64), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
-    space.create_room((64, 0), (64, 64), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
-    space.create_room((0, 64), (64, 64), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
-    space.create_room((180, 220), (160, 160), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
+    space = WorldSpace((640, 640), tile_size)
+    space.create_room((352, 0), (128, 256), RoomType.RECTANGLE, "assets/floor_1.png", tile_size)
+    space.create_room((0, 0), (320, 640), RoomType.ROUND, "assets/floor_1.png", tile_size)
     return space
 
 if __name__ == "__main__":
