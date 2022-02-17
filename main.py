@@ -6,6 +6,7 @@ from lib.worldSpace import WorldSpace
 from lib.room import Room, RoomType
 
 def update_screen():
+    global screen
     screen.fill(black)
     world_space.draw(screen)
     for object in objects:
@@ -14,6 +15,7 @@ def update_screen():
     pg.display.flip()
 
 def main():
+    global screen
     clock = pg.time.Clock()
 
     fullscreen = False
@@ -39,13 +41,13 @@ def main():
 
         pressed = pg.key.get_pressed()
         if pressed[pg.K_UP]:
-            player.move("up", screen)
+            player.move("up", screen, world_space.non_walkable)
         if pressed[pg.K_DOWN]:
-            player.move("down", screen)
+            player.move("down", screen, world_space.non_walkable)
         if pressed[pg.K_RIGHT]:
-            player.move("right", screen)
+            player.move("right", screen, world_space.non_walkable)
         if pressed[pg.K_LEFT]:
-            player.move("left", screen)
+            player.move("left", screen, world_space.non_walkable)
     
         update_screen()
 
@@ -68,6 +70,7 @@ def create_space():
                         RoomType.ROUND, "assets/floor_1.png")
     space.create_room((0, win_height // 2), (win_width, win_height // 2),
                         RoomType.RANDOM, "assets/floor_1.png")
+    space.create_walls("assets/wall_1.png")
     return space
 
 if __name__ == "__main__":

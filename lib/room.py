@@ -48,7 +48,21 @@ class Room:
         if self.room_type == RoomType.RANDOM:
             self.generate_random_room(floor_texture, tile_size)
 
+    def create_walls(self, wall_texture, tile_size):
+        floor_positions = [cell.pos for cell in self.cells]
+        for row in range(0, self.size[1] // tile_size):
+            for col in range(0, self.size[0] // tile_size):
+                if (col * tile_size, row * tile_size) not in floor_positions:
+                    self.cells.append(Cell(self.image, wall_texture,
+                                        (tile_size, tile_size),
+                                        (col * tile_size, row * tile_size),
+                                        False))
+
     def draw(self, pos, screen: pg.Surface):
+        """
+        pos: tuple of pixels relative to screen
+        screen: surface to draw onto
+        """
         self.rect.topleft = pos
         for cell in self.cells:
             cell.draw()
