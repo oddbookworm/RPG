@@ -1,5 +1,5 @@
-from math import floor
 import pygame as pg
+from copy import deepcopy
 try:
     from room import Room, RoomType
     from cell import Cell
@@ -38,9 +38,16 @@ class WorldSpace:
             room[0].create_walls(wall_texture, self.tile_size)
 
         for room in self.rooms:
+            offset = room[1]
             for cell in room[0].cells:
                 if not cell.is_walkable:
-                    self.non_walkable.add(cell)
+                    surf = cell.surface
+                    pos = (cell.pos[0] + offset[0], cell.pos[1] + offset[1])
+                    size = cell.size
+                    tex = cell.texture
+                    temp_cell = Cell(surf, tex, size, pos, False)
+
+                    self.non_walkable.add(temp_cell)
 
     def draw(self, screen, space_pos = (0, 0)):
         """

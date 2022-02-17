@@ -21,6 +21,7 @@ class Player(GameCharacter):
             self.waypoints = None
             self.repeat = False
             self.available = ["right", "left", "up", "down"]
+            self.scale = 1
 
             for (key, value) in kwargs.items():
                 if hasattr(self, key):
@@ -29,21 +30,23 @@ class Player(GameCharacter):
                     print(f"{type(self).__name__} has no attribute {key}")
 
             super().__init__(texture = self.texture, pos = self.pos, width = self.width, 
-                            height = self.height, interactable = self.interactable, speed = self.speed,
+                            height = self.height,
+                            interactable = self.interactable, speed = self.speed,
                             repeat = self.repeat, waypoints = self.waypoints)
 
-    def collide(self, non_walkables):
-        self.available = ["right", "left", "up", "down"]
+    def collide(self, direction, non_walkables):
         collided = pg.sprite.spritecollideany(self, non_walkables)
         if collided is not None:
-            if collided.pos[0] < self.pos[0]:
-                self.available.remove("left")
-            elif collided.pos[0] > self.pos[0]:
-                self.available.remove("right")
-            if collided.pos[1] < self.pos[1]:
-                self.available.remove("up")
-            elif collided.pos[1] > self.pos[1]:
-                self.available.remove("down")
+            x = collided.pos[0]
+            y = collided.pos[1]
+            if collided.pos[0] < self.pos[0] and direction == "left":
+                self.pos = (x + self.width, self.pos[1])
+            elif collided.pos[0] > self.pos[0] and direction == "right":
+                self.pos = (x - self.width, self.pos[1])
+            if collided.pos[1] < self.pos[1] and direction == "up":
+                self.pos = (self.pos[0], y + self.height)
+            elif collided.pos[1] > self.pos[1] and direction == "down":
+                self.pos = (self.pos[0], y - self.height)
 
     def move(self, direction, screen, non_walkables):
         """
@@ -51,15 +54,17 @@ class Player(GameCharacter):
         screen: screen to draw on
         non_walkables: sprite group of non_walkable sprites
         """
+        self.collide(direction, non_walkables)
+
         screen_size = screen.get_size()
 
-        if direction == "right" and "right" in self.available:
+        if direction == "right":
             self.pos = (self.pos[0] + self.speed, self.pos[1])
-        elif direction == "left" and "left" in self.available:
+        elif direction == "left":
             self.pos = (self.pos[0] - self.speed, self.pos[1])
-        elif direction == "up" and "up" in self.available:
+        elif direction == "up":
             self.pos = (self.pos[0], self.pos[1] - self.speed)
-        elif direction == "down" and "down" in self.available:
+        elif direction == "down":
             self.pos = (self.pos[0], self.pos[1] + self.speed)
 
         if self.pos[0] < 0:
@@ -71,7 +76,5 @@ class Player(GameCharacter):
             self.pos = (self.pos[0], 0)
         elif self.pos[1] > screen_size[1] - self.height:
             self.pos = (self.pos[0], screen_size[1] - self.height)
-
-        self.collide(non_walkables)
 
         self.rect.topleft = self.pos

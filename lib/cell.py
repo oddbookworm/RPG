@@ -13,8 +13,9 @@ class Cell(pg.sprite.Sprite):
         self.pos = pos
         self.size = size
         self.is_walkable = is_walkable
+        self.texture = texture
 
-        with open(texture, 'r') as texture:
+        with open(self.texture, 'r') as texture:
             self.image = pg.image.load(texture).convert_alpha()
         self.image = pg.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect()

@@ -1,9 +1,12 @@
+from turtle import color
 import pygame as pg
 from lib.gameCharacter import GameCharacter
 from lib.gameObject import GameObject
 from lib.player import Player
 from lib.worldSpace import WorldSpace
 from lib.room import Room, RoomType
+
+# collision with cells broken: need to fix offsets
 
 def update_screen():
     global screen
@@ -32,7 +35,8 @@ def main():
                     if fullscreen:
                         screen = pg.display.set_mode((win_width, win_height))
                     else:
-                        screen = pg.display.set_mode((win_width, win_height), pg.FULLSCREEN)
+                        screen = pg.display.set_mode((win_width, win_height),
+                                                        pg.FULLSCREEN)
                     fullscreen = not fullscreen
             
             if event.type == pg.KEYUP:
@@ -57,8 +61,10 @@ def create_objects():
     object_list = []
     default_speed = 3.7 * tile_size / fps # speed of 3.7 tiles per second
     ptex = "assets/knight_idle_anim_f0.png"
-    player = Player(texture = ptex, pos = (32, 32), width = 32, height = 32, 
-                    speed = default_speed)
+    (width, height) = (tile_size, tile_size)
+    scale = 0.7
+    player = Player(texture = ptex, pos = (32, 32), width = width,
+                    height = height, speed = default_speed, scale = scale)
 
     return object_list, player
 
