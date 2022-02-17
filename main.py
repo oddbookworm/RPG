@@ -38,20 +38,19 @@ def main():
                         screen = pg.display.set_mode((win_width, win_height),
                                                         pg.FULLSCREEN)
                     fullscreen = not fullscreen
+
+                if event.key == pg.K_UP:
+                    player.move("up", screen, world_space.non_walkable)
+                if event.key == pg.K_DOWN:
+                    player.move("down", screen, world_space.non_walkable)
+                if event.key == pg.K_RIGHT:
+                    player.move("right", screen, world_space.non_walkable)
+                if event.key == pg.K_LEFT:
+                    player.move("left", screen, world_space.non_walkable)
             
             if event.type == pg.KEYUP:
                 if event.key in [pg.K_LSHIFT, pg.K_RSHIFT]:
                     player.speed /= 1.75
-
-        pressed = pg.key.get_pressed()
-        if pressed[pg.K_UP]:
-            player.move("up", screen, world_space.non_walkable)
-        if pressed[pg.K_DOWN]:
-            player.move("down", screen, world_space.non_walkable)
-        if pressed[pg.K_RIGHT]:
-            player.move("right", screen, world_space.non_walkable)
-        if pressed[pg.K_LEFT]:
-            player.move("left", screen, world_space.non_walkable)
     
         update_screen()
 

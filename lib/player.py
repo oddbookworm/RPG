@@ -34,19 +34,8 @@ class Player(GameCharacter):
                             interactable = self.interactable, speed = self.speed,
                             repeat = self.repeat, waypoints = self.waypoints)
 
-    def collide(self, direction, non_walkables):
-        collided = pg.sprite.spritecollideany(self, non_walkables)
-        if collided is not None:
-            x = collided.pos[0]
-            y = collided.pos[1]
-            if collided.pos[0] < self.pos[0] and direction == "left":
-                self.pos = (x + self.width, self.pos[1])
-            elif collided.pos[0] > self.pos[0] and direction == "right":
-                self.pos = (x - self.width, self.pos[1])
-            if collided.pos[1] < self.pos[1] and direction == "up":
-                self.pos = (self.pos[0], y + self.height)
-            elif collided.pos[1] > self.pos[1] and direction == "down":
-                self.pos = (self.pos[0], y - self.height)
+    def collide(self, non_walkables):
+        return pg.sprite.spritecollideany(self, non_walkables)
 
     def move(self, direction, screen, non_walkables):
         """
@@ -54,18 +43,18 @@ class Player(GameCharacter):
         screen: screen to draw on
         non_walkables: sprite group of non_walkable sprites
         """
-        self.collide(direction, non_walkables)
-
         screen_size = screen.get_size()
+        
+        old_pos = self.pos
 
         if direction == "right":
-            self.pos = (self.pos[0] + self.speed, self.pos[1])
+            self.pos = (self.pos[0] + self.width, self.pos[1])
         elif direction == "left":
-            self.pos = (self.pos[0] - self.speed, self.pos[1])
+            self.pos = (self.pos[0] - self.width, self.pos[1])
         elif direction == "up":
-            self.pos = (self.pos[0], self.pos[1] - self.speed)
+            self.pos = (self.pos[0], self.pos[1] - self.height)
         elif direction == "down":
-            self.pos = (self.pos[0], self.pos[1] + self.speed)
+            self.pos = (self.pos[0], self.pos[1] + self.height)
 
         if self.pos[0] < 0:
             self.pos = (0, self.pos[1])
@@ -78,3 +67,7 @@ class Player(GameCharacter):
             self.pos = (self.pos[0], screen_size[1] - self.height)
 
         self.rect.topleft = self.pos
+
+        if self.collide(non_walkables):
+            self.pos = old_pos
+            self.rect.topleft = self.pos
