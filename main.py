@@ -1,12 +1,19 @@
-from turtle import color
 import pygame as pg
 from lib.gameCharacter import GameCharacter
 from lib.gameObject import GameObject
 from lib.player import Player
 from lib.worldSpace import WorldSpace
 from lib.room import Room, RoomType
+import os
+import sys
 
 # collision with cells broken: need to fix offsets
+
+def get_path(filename):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, filename)
+    else:
+        return filename
 
 def update_screen():
     global screen
@@ -60,7 +67,7 @@ def main():
 def create_objects():
     object_list = []
     default_speed = 3.7 * tile_size / fps # speed of 3.7 tiles per second
-    ptex = "assets/knight_idle_anim_f0.png"
+    ptex = get_path("assets\\knight_idle_anim_f0.png")
     (width, height) = (tile_size, tile_size)
     scale = 0.7
     player = Player(texture = ptex, pos = (32, 32), width = width,
@@ -70,14 +77,16 @@ def create_objects():
     return object_list, player
 
 def create_space():
+    floor_tex = get_path("assets\\floor_1.png")
+    wall_tex = get_path("assets\\wall_1.png")
     space = WorldSpace((win_width, win_height), tile_size)
     space.create_room((0, 0), (win_width, win_height // 4), 
-                        RoomType.RECTANGLE, "assets/floor_1.png")
+                        RoomType.RECTANGLE, floor_tex)
     space.create_room((0, win_height // 4), (win_width, win_height // 4),
-                        RoomType.ROUND, "assets/floor_1.png")
+                        RoomType.ROUND, floor_tex)
     space.create_room((0, win_height // 2), (win_width, win_height // 2),
-                        RoomType.RANDOM, "assets/floor_1.png")
-    space.create_walls("assets/wall_1.png")
+                        RoomType.RANDOM, floor_tex)
+    space.create_walls(wall_tex)
     return space
 
 if __name__ == "__main__":
