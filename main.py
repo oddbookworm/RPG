@@ -64,7 +64,8 @@ def create_objects():
     (width, height) = (tile_size, tile_size)
     scale = 0.7
     player = Player(texture = ptex, pos = (32, 32), width = width,
-                    height = height, speed = default_speed, scale = scale)
+                    height = height, speed = default_speed, scale = scale,
+                    tile_size = tile_size)
 
     return object_list, player
 
