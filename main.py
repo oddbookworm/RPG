@@ -19,8 +19,10 @@ def update_screen():
 def main():
     global screen
     clock = pg.time.Clock()
-
+    movement_toggle = False
+    directions = []
     fullscreen = False
+    i = 0
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -40,20 +42,42 @@ def main():
 
                 if event.key == pg.K_UP:
                     player.move("up", screen, world_space.non_walkable)
+                    directions.append("up")
+                    i = 1
                 if event.key == pg.K_DOWN:
                     player.move("down", screen, world_space.non_walkable)
+                    directions.append("down")
+                    i = 1
                 if event.key == pg.K_RIGHT:
                     player.move("right", screen, world_space.non_walkable)
+                    directions.append("right")
+                    i = 1
                 if event.key == pg.K_LEFT:
                     player.move("left", screen, world_space.non_walkable)
+                    directions.append("left")
+                    i = 1
             
             if event.type == pg.KEYUP:
                 if event.key in [pg.K_LSHIFT, pg.K_RSHIFT]:
                     player.speed /= 1.75
-    
+
+                if event.key == pg.K_UP:
+                    directions.remove("up")
+                if event.key == pg.K_DOWN:
+                    directions.remove("down")
+                if event.key == pg.K_RIGHT:
+                    directions.remove("right")
+                if event.key == pg.K_LEFT:
+                    directions.remove("left")
+
+        if i % (fps // 4) == 0:
+            for direction in directions:
+                player.move(direction, screen, world_space.non_walkable)
+
         update_screen()
 
         clock.tick(fps)
+        i += 1
 
 def create_objects():
     object_list = []
