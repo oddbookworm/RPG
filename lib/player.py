@@ -35,20 +35,58 @@ class Player(GameCharacter):
                             interactable = self.interactable, speed = self.speed,
                             repeat = self.repeat, waypoints = self.waypoints)
 
-    def collide(self, non_walkables):
+    def collide(self, non_walkables, direction):
         collisions = pg.sprite.spritecollide(self, non_walkables, False)
         for cell in collisions:
+            dy = - (self.pos[1] - cell.pos[1]) # negative to account for the reversed y-axis
+            dx = self.pos[0] - cell.pos[0]
             cell_rect = cell.rect
-            
+            # straight up side-side collisions
             if cell_rect.collidepoint(self.rect.midleft):
                 self.pos = (cell.pos[0] + cell.size[0], self.pos[1])
-            if cell_rect.collidepoint(self.rect.midright):
+
+            elif cell_rect.collidepoint(self.rect.midright):
                 self.pos = (cell.pos[0] - cell.size[0], self.pos[1])
 
-            if cell.rect.collidepoint(self.rect.midtop):
+            elif cell.rect.collidepoint(self.rect.midtop):
                 self.pos = (self.pos[0], cell.pos[1] + cell.size[1])
-            if cell.rect.collidepoint(self.rect.midbottom):
+
+            elif cell.rect.collidepoint(self.rect.midbottom):
                 self.pos = (self.pos[0], cell.pos[1] - cell.size[1])
+
+            # corner-corner collisions
+            elif cell_rect.collidepoint(self.rect.bottomleft):
+                if dy / dx > 1:
+                    self.pos = (self.pos[0], cell.pos[1] - self.height)
+                elif dy / dx < 1:
+                    self.pos = (cell.pos[0] + cell.size[0], self.pos[1])
+                elif dy / dx == 1:
+                    self.pos = (cell.pos[0] + cell.size[0], cell.pos[1] - self.height)
+
+            elif cell_rect.collidepoint(self.rect.bottomright):
+                if dy / dx > -1:
+                    self.pos = (cell.pos[0] - self.width, self.pos[1])
+                elif dy / dx < -1:
+                    self.pos = (self.pos[0], cell.pos[1] -self.height)
+                elif dy / dx == -1:
+                    self.pos = (cell.pos[0] - self.width, cell.pos[1] -self.height)
+
+            elif cell_rect.collidepoint(self.rect.topleft):
+                if dy / dx < -1:
+                    self.pos = (self.pos[0], cell.pos[1] + cell.size[1])
+                elif dy / dx > -1:
+                    self.pos = (cell.pos[0] + self.width, self.pos[1])
+                elif dy / dx == -1:
+                    self.pos = (cell.pos[0] + self.width, cell.pos[1] + cell.size[1])
+
+            elif cell_rect.collidepoint(self.rect.topright):
+                if dy / dx > 1:
+                    self.pos = (self.pos[0], cell.pos[1] + cell.size[1])
+                elif dy / dx < 1:
+                    self.pos = (cell.pos[0] - self.width, self.pos[1])
+                elif dy / dx == 1:
+                    self.pos = (cell.pos[0] - self.width, cell.pos[1] + cell.size[1])
+
 
     def move(self, direction, screen, non_walkables):
         """
@@ -81,7 +119,7 @@ class Player(GameCharacter):
         elif self.pos[1] > screen_size[1] - self.height:
             self.pos = (self.pos[0], screen_size[1] - self.height)
 
-        if self.collide(non_walkables):
+        if self.collide(non_walkables, direction):
             self.pos = old_pos
 
         self.rect.topleft = self.pos
