@@ -86,7 +86,7 @@ if __name__ == "__main__":
     win_height = 640
     screen = pg.display.set_mode((win_width, win_height))
     tile_size = 32
-    fps = 120
+    fps = 60
     black = (255, 0, 0)
 
     (objects, player) = create_objects()
