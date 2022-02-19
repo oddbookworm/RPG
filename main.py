@@ -5,8 +5,6 @@ from lib.player import Player
 from lib.worldSpace import WorldSpace
 from lib.room import Room, RoomType
 
-# collision with cells broken: need to fix offsets
-
 def update_screen():
     global screen
     screen.fill(black)
