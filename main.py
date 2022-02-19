@@ -7,8 +7,6 @@ from lib.room import Room, RoomType
 import os
 import sys
 
-# collision with cells broken: need to fix offsets
-
 def get_path(filename):
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, filename)

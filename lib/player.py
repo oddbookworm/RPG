@@ -56,35 +56,39 @@ class Player(GameCharacter):
 
             # corner-corner collisions
             elif cell_rect.collidepoint(self.rect.bottomleft):
-                if dy / dx > 1:
+                m_corner = self.height / cell.size[0]
+                if dy / dx > m_corner:
                     self.pos = (self.pos[0], cell.pos[1] - self.height)
-                elif dy / dx < 1:
+                elif dy / dx < m_corner:
                     self.pos = (cell.pos[0] + cell.size[0], self.pos[1])
-                elif dy / dx == 1:
+                elif dy / dx == m_corner:
                     self.pos = (cell.pos[0] + cell.size[0], cell.pos[1] - self.height)
 
             elif cell_rect.collidepoint(self.rect.bottomright):
-                if dy / dx > -1:
+                m_corner = - self.height / self.width
+                if dy / dx > m_corner:
                     self.pos = (cell.pos[0] - self.width, self.pos[1])
-                elif dy / dx < -1:
+                elif dy / dx < m_corner:
                     self.pos = (self.pos[0], cell.pos[1] -self.height)
-                elif dy / dx == -1:
+                elif dy / dx == m_corner:
                     self.pos = (cell.pos[0] - self.width, cell.pos[1] -self.height)
 
             elif cell_rect.collidepoint(self.rect.topleft):
-                if dy / dx < -1:
+                m_corner = - cell.size[1] / cell.size[0]
+                if dy / dx < m_corner:
                     self.pos = (self.pos[0], cell.pos[1] + cell.size[1])
-                elif dy / dx > -1:
+                elif dy / dx > m_corner:
                     self.pos = (cell.pos[0] + self.width, self.pos[1])
-                elif dy / dx == -1:
+                elif dy / dx == m_corner:
                     self.pos = (cell.pos[0] + self.width, cell.pos[1] + cell.size[1])
 
             elif cell_rect.collidepoint(self.rect.topright):
-                if dy / dx > 1:
+                m_corner = cell.size[1] / self.width
+                if dy / dx > m_corner:
                     self.pos = (self.pos[0], cell.pos[1] + cell.size[1])
-                elif dy / dx < 1:
+                elif dy / dx < m_corner:
                     self.pos = (cell.pos[0] - self.width, self.pos[1])
-                elif dy / dx == 1:
+                elif dy / dx == m_corner:
                     self.pos = (cell.pos[0] - self.width, cell.pos[1] + cell.size[1])
 
 
