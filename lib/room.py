@@ -16,6 +16,7 @@ class RoomType(AutoName):
     RECTANGLE = auto()
     ROUND = auto()
     CUSTOM = auto()
+    HALL = auto()
 
 class Room:
     def __init__(self, room_type: RoomType, size: tuple[int]):
@@ -39,6 +40,11 @@ class Room:
         seed: only used for random rooms. Use this to duplicate a buggy room
         """
         self.seed = seed
+        if self.room_type == RoomType.HALL:
+            print("Hall generation handled by Hall subclass")
+            print("Use Hall.create_hall() method")
+            return
+
         if self.room_type == RoomType.RECTANGLE:
             self.generate_rect_room(floor_texture, tile_size)
         

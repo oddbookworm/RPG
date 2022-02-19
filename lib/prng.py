@@ -7,12 +7,12 @@ def prng(mySeed, number_values):
     and returns a list of number_values values generated
     from that seed
     """
-    return [random() for _ in range(number_values)]
+    r = [random() for _ in range(number_values)]
+    seed(None)
+    return r
 
 if __name__ == "__main__":
     randoms = prng(12012, 1000)
 
     first = [r for r in randoms if r <= 0.55]
     second = [r for r in randoms if r > 0.55]
-
-    print(len(first) / (len(first) + len(second)))

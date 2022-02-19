@@ -4,6 +4,7 @@ from lib.gameObject import GameObject
 from lib.player import Player
 from lib.worldSpace import WorldSpace
 from lib.room import Room, RoomType
+from lib.hall import Hall
 import os
 import sys
 
@@ -14,8 +15,9 @@ def get_path(filename):
         return filename
 
 def update_screen():
-    global screen
+    global screen, hall
     screen.fill(black)
+    hall.draw((32, win_height // 4), screen)
     world_space.draw(screen)
     for object in objects:
         object.draw(screen)
@@ -96,13 +98,16 @@ def create_objects():
     return object_list, player
 
 def create_space():
+    global hall
     floor_tex = get_path("assets/floor_1.png")
     wall_tex = get_path("assets/wall_1.png")
     space = WorldSpace((win_width, win_height), tile_size)
     space.create_room((0, 0), (win_width, win_height // 4), 
                         RoomType.RECTANGLE, floor_tex)
-    space.create_room((0, win_height // 4), (win_width, win_height // 4),
-                        RoomType.ROUND, floor_tex)
+    # space.create_room((0, win_height // 4), (win_width, win_height // 4),
+    #                     RoomType.ROUND, floor_tex)
+    hall = Hall((32, win_height // 4), (3 * win_height // 4, win_height // 2), tile_size)
+    hall.create_hall(floor_tex, wall_tex)
     space.create_room((0, win_height // 2), (win_width, win_height // 2),
                         RoomType.RANDOM, floor_tex)
     space.create_walls(wall_tex)
