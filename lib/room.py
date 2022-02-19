@@ -1,6 +1,4 @@
 from enum import Enum, auto
-from math import floor
-from numpy import tile
 import pygame as pg
 try:
     from cell import Cell
@@ -31,6 +29,8 @@ class Room:
         self.image = pg.Surface(self.size, pg.SRCALPHA, 32).convert_alpha()
         self.image.fill((0, 0, 0, 0))
         self.rect = self.image.get_rect()
+        self.entrances = []
+        self.exits = []
 
     def create_room(self, floor_texture, tile_size, seed):
         """
@@ -79,6 +79,10 @@ class Room:
                 pos = (col * tile_size, row * tile_size)
                 self.cells.append(Cell(self.image, floor_texture, size,
                                         pos, True))
+        for cell in self.cells:
+            if self.count_floor_neighbors(cell, tile_size) < 4:
+                self.entrances.append(cell)
+                self.exits.append(cell)
 
     def generate_round_room(self, floor_texture, tile_size):
         num_horiz_cells = self.size[0] // tile_size
@@ -109,6 +113,22 @@ class Room:
                                 self.cells.append(Cell(self.image, floor_texture, size,
                                             pos, True))
                                 skipping = True
+        
+        for cell in self.cells:
+            if self.count_floor_neighbors(cell, tile_size) < 4:
+                self.entrances.append(cell)
+                self.exits.append(cell)
+
+    def count_floor_neighbors(self, cell, tile_size):
+        count = 0
+        for test_cell in self.cells:
+            if test_cell.is_walkable:
+                x_dist = abs(cell.pos[0] - test_cell.pos[0])
+                y_dist = abs(cell.pos[1] - test_cell.pos[1])
+                taxi_dist = x_dist + y_dist
+                if taxi_dist == tile_size:
+                    count += 1
+        return count
 
     def generate_random_room(self, floor_texture, tile_size):
         random_room = RandomRoom(self.size, tile_size, prob_floor = 0.8, seed = self.seed)

@@ -25,7 +25,6 @@ def update_screen():
 def main():
     global screen
     clock = pg.time.Clock()
-    movement_toggle = False
     directions = []
     fullscreen = False
     i = 0

@@ -1,5 +1,4 @@
 import pygame as pg
-from copy import deepcopy
 try:
     from room import Room, RoomType
     from cell import Cell

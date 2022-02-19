@@ -1,5 +1,4 @@
 from collections import defaultdict
-from copy import deepcopy
 
 """
 I got the majority of this code in the StackOverflow answer at
