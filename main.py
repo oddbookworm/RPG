@@ -1,5 +1,6 @@
 import pygame as pg
 from os import path
+from traceback import format_tb
 import sys
 import logging
 from time import time, localtime, strftime
@@ -7,10 +8,15 @@ from lib.config import SETTINGS
 
 def catch_uncaught_exception(typ, value, traceback):
     """Use to override sys.excepthook to log uncaught exceptions"""
-    logging.critical(f"{get_time()} Uncaught Exception!")
+    logging.critical("Uncaught Exception!")
     logging.critical(f"Type: {typ}")
     logging.critical(f"Value: {value}")
-    logging.critical(f"Traceback: {traceback}")
+    # logging.critical(f"Traceback: {traceback}")
+
+    if traceback:
+        format_exception = format_tb(traceback)
+        for line in format_exception:
+            logging.critical(repr(line))
 
 def get_time():
     return strftime("%Y-%m-%d %H:%M:%S", localtime(time()))
@@ -31,21 +37,22 @@ def enable_logging():
         filemode = 'w'
     else:
         filemode = 'a'
+    format = f'[%(levelname)s] %(asctime)s %(message)s'
+    datefmt='%m/%d/%Y %I:%M:%S %p'
     if SETTINGS['DEBUG']['LOGGING']:
         level = logging.DEBUG
-        logging.basicConfig(filename = get_path("debug.log"), encoding = 'utf-8', 
-                            level = level, filemode = filemode)
     else:
         level = logging.INFO
-        logging.basicConfig(filename = get_path("debug.log"), encoding = 'utf-8',
-                            level = level, filemode = filemode)
-    logging.info(f'{get_time()} Logging enabled at level {level}')
+    logging.basicConfig(filename = get_path("debug.log"), encoding = 'utf-8',
+                        level = level, filemode = filemode, format = format,
+                        datefmt = datefmt)
+    logging.info(f'Logging enabled at level {level}')
 
 def event_loop():
     """Monitors all input and performs tasks based on that input."""
     for event in pg.event.get():
         if event.type == pg.QUIT:
-            logging.info(f'{get_time()} Detected QUIT event, terminating program.')
+            logging.info('Detected QUIT event, terminating program.')
             return False
     return True
 
@@ -64,14 +71,20 @@ def main():
     else:
         screen = pg.display.set_mode(screen_size, pg.SRCALPHA, 32)
     
+    fps_log_delay = 0
     while event_loop():
         update_screen(screen)
         clock.tick(SETTINGS['GENERAL']['FPS'])
         fps = clock.get_fps()
 
-        if fps < SETTINGS['GENERAL']['FPS'] * 0.8:
-            logging.info(f"{get_time()} Getting a bit too laggy here")
-            logging.info(f"{get_time()} fps recorded at {fps}")
+        # the sole purpose of fps_log_delay is to prevent logs from being
+        # generated for the first 10 frames (during which clock.get_fps())
+        # returns 0.0
+        if fps_log_delay < 10:
+            fps_log_delay += 1
+        elif fps < SETTINGS['GENERAL']['FPS'] * 0.8:
+            logging.info("Getting a bit too laggy here")
+            logging.info(f"fps recorded at {fps}")
 
 if __name__ == "__main__":
     sys.excepthook = catch_uncaught_exception
