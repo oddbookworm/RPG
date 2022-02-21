@@ -3,33 +3,19 @@ from os import path
 from traceback import format_tb
 import sys
 import logging
-from time import time, localtime, strftime
 from lib.config import SETTINGS
+from lib.utility import get_path
 
 def catch_uncaught_exception(typ, value, traceback):
     """Use to override sys.excepthook to log uncaught exceptions"""
     logging.critical("Uncaught Exception!")
     logging.critical(f"Type: {typ}")
     logging.critical(f"Value: {value}")
-    # logging.critical(f"Traceback: {traceback}")
 
     if traceback:
         format_exception = format_tb(traceback)
         for line in format_exception:
             logging.critical(repr(line))
-
-def get_time():
-    return strftime("%Y-%m-%d %H:%M:%S", localtime(time()))
-
-def get_path(filename):
-    """This is really so that any executables created with pyinstaller can find
-    appropriate resources. Any time a file is read or written, use this
-    function with the relative path from here.
-    """
-    if hasattr(sys, "_MEIPASS"):
-        return path.join(sys._MEIPASS, filename)
-    else:
-        return filename
 
 def enable_logging():
     """Enables logging"""
@@ -78,7 +64,7 @@ def main():
         fps = clock.get_fps()
 
         # the sole purpose of fps_log_delay is to prevent logs from being
-        # generated for the first 10 frames (during which clock.get_fps())
+        # generated for the first 10 frames, during which clock.get_fps()
         # returns 0.0
         if fps_log_delay < 10:
             fps_log_delay += 1
