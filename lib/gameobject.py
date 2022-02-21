@@ -15,12 +15,15 @@ class GameObject(pg.sprite.Sprite):
         self.pos = pos
 
         super().__init__()
+        self.set_texture(texture)
+
+    def draw(self, world: pg.Surface):
+        """Draws object to the world surface"""
+        world.blit(self.image, self.rect)
+
+    def set_texture(self, new_texture):
         with open(texture, 'r') as texture:
             self.image = pg.image.load(texture).convert_alpha()
         self.image = pg.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect()
         self.rect.topleft = self.pos
-
-    def draw(self, world: pg.Surface):
-        """Draws object to the world surface"""
-        world.blit(self.image, self.rect)
