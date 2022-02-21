@@ -35,24 +35,26 @@ class Player(GameCharacter):
 
         old_pos = self.pos
 
+        tile_size = SETTINGS['GENERAL']['TILESIZE']
+        move_amt = tile_size
         options = {
-            'right': (self.size[0], 0),
-            'left': (-self.size[0], 0),
-            'up': (0, -self.size[1]),
-            'down': (0, self.size[1])
+            'right': (move_amt, 0),
+            'left': (-move_amt, 0),
+            'up': (0, -move_amt),
+            'down': (0, move_amt)
         }
 
         self.pos = add_tuples(self.pos, options[direction])
 
         if self.pos[0] < 0:
             self.pos = (0, self.pos[1])
-        elif self.pos[0] > world_size[0] - self.width:
-            self.pos = (world_size[0] - self.width, self.pos[1])
+        elif self.pos[0] > world_size[0] - move_amt:
+            self.pos = (world_size[0] - move_amt, self.pos[1])
 
         if self.pos[1] < 0:
             self.pos = (self.pos[0], 0)
-        elif self.pos[1] > world_size[1] - self.height:
-            self.pos = (self.pos[0], world_size[1] - self.height)
+        elif self.pos[1] > world_size[1] - move_amt:
+            self.pos = (self.pos[0], world_size[1] - move_amt)
 
         self.rect.topleft = self.pos
 
