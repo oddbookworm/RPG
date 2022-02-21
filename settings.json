@@ -1,0 +1,13 @@
+{
+    "GENERAL": {
+        "FPS": 60,
+        "WIDTH": 1280,
+        "HEIGHT": 640,
+        "FULLSCREEN": false,
+        "TILESIZE": 32
+    },
+    "DEBUG": {
+        "LOGGING": true,
+        "CLEAR_LOGS": true
+    }
+}
