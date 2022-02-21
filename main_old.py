@@ -1,9 +1,9 @@
 import pygame as pg
-from lib.gameCharacter import GameCharacter
-from lib.gameObject import GameObject
-from lib.player import Player
-from lib.worldSpace import WorldSpace
-from lib.room import Room, RoomType
+from lib_old.gameCharacter import GameCharacter
+from lib_old.gameObject import GameObject
+from lib_old.player import Player
+from lib_old.worldSpace import WorldSpace
+from lib_old.room import Room, RoomType
 import os
 import sys
 

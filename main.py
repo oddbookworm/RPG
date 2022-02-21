@@ -2,14 +2,18 @@ import pygame as pg
 from os import path
 import sys
 import logging
+from time import time, localtime, strftime
 from lib.config import SETTINGS
 
 def catch_uncaught_exception(typ, value, traceback):
     """Use to override sys.excepthook to log uncaught exceptions"""
-    logging.critical("Uncaught Exception!")
+    logging.critical(f"{get_time()} Uncaught Exception!")
     logging.critical(f"Type: {typ}")
     logging.critical(f"Value: {value}")
     logging.critical(f"Traceback: {traceback}")
+
+def get_time():
+    return strftime("%Y-%m-%d %H:%M:%S", localtime(time()))
 
 def get_path(filename):
     """This is really so that any executables created with pyinstaller can find
@@ -29,19 +33,19 @@ def enable_logging():
         filemode = 'a'
     if SETTINGS['DEBUG']['LOGGING']:
         level = logging.DEBUG
-        logging.basicConfig(filename = "debug.log", encoding = 'utf-8', 
+        logging.basicConfig(filename = get_path("debug.log"), encoding = 'utf-8', 
                             level = level, filemode = filemode)
     else:
         level = logging.INFO
-        logging.basicConfig(filename = "debug.log", encoding = 'utf-8',
+        logging.basicConfig(filename = get_path("debug.log"), encoding = 'utf-8',
                             level = level, filemode = filemode)
-    logging.info(f'Logging enabled at level {level}')
+    logging.info(f'{get_time()} Logging enabled at level {level}')
 
 def event_loop():
     """Monitors all input and performs tasks based on that input."""
     for event in pg.event.get():
         if event.type == pg.QUIT:
-            logging.info('Detected QUIT event, terminating program.')
+            logging.info(f'{get_time()} Detected QUIT event, terminating program.')
             return False
     return True
 
@@ -59,9 +63,15 @@ def main():
         screen = pg.display.set_mode(screen_size, pg.SRCALPHA, 32, pg.FULLSCREEN)
     else:
         screen = pg.display.set_mode(screen_size, pg.SRCALPHA, 32)
+    
     while event_loop():
         update_screen(screen)
         clock.tick(SETTINGS['GENERAL']['FPS'])
+        fps = clock.get_fps()
+
+        if fps < SETTINGS['GENERAL']['FPS'] * 0.8:
+            logging.info(f"{get_time()} Getting a bit too laggy here")
+            logging.info(f"{get_time()} fps recorded at {fps}")
 
 if __name__ == "__main__":
     sys.excepthook = catch_uncaught_exception
