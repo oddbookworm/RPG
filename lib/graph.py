@@ -55,8 +55,7 @@ class Graph:
         return None
 
     def largest_subgraph(self):
-        """
-        there is a bug that a single edge coming into a directed 
+        """there is a bug that a single edge coming into a directed 
         network isn't detected properly and probably heavily 
         optimizable
         """
