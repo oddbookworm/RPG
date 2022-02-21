@@ -1,10 +1,10 @@
 import pygame as pg
-from os import path
 from traceback import format_tb
 import sys
 import logging
 from lib.config import SETTINGS
 from lib.utility import get_path
+from lib.player import Player
 
 def catch_uncaught_exception(typ, value, traceback):
     """Use to override sys.excepthook to log uncaught exceptions"""
