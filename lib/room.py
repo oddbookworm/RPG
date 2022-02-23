@@ -32,20 +32,26 @@ class Room:
         self.image.fill((0, 0, 0, 0))
         self.rect = self.image.get_rect()
 
-    def create_room(self, floor_texture, tile_size, seed):
+    def create_room(self, seed):
         """floor_texture: path to a texture
         tile_size: int of tile size
         seed: only used for random rooms. Use this to duplicate a buggy room
         """
         self.seed = seed
         if self.room_type == RoomType.RECTANGLE:
-            self.generate_rect_room(floor_texture, tile_size)
+            self.generate_rect_room()
         
         if self.room_type == RoomType.ROUND:
-            self.generate_round_room(floor_texture, tile_size)
+            self.generate_round_room()
 
         if self.room_type == RoomType.RANDOM:
-            self.generate_random_room(floor_texture, tile_size)
+            self.generate_random_room()
         
-    def generate_rect_room(self, floor_texture):
+    def generate_rect_room(self):
+        pass
+
+    def generate_round_room(self):
+        pass
+
+    def generate_random_room(self):
         pass
