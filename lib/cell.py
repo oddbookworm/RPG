@@ -23,6 +23,7 @@ class Cell(pg.sprite.Sprite):
 
     def set_texture(self, new_texture):
         """sets the texture"""
+        self.texture = new_texture
         with open(self.texture, 'r') as texture:
             self.image = pg.image.load(texture).convert_alpha()
         self.image = pg.transform.scale(self.image, self.size)
