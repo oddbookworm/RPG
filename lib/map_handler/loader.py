@@ -3,6 +3,7 @@ from pathlib import Path
 from sys import path
 import logging
 import json
+from time import perf_counter
 
 # importing from superpkg lib/
 _parentdir = Path(__file__).parent.parent.resolve()
@@ -16,10 +17,10 @@ def load_map(json_file):
     with open(json_file, "r") as data:
         return json.load(data)
 
-def extract_cells(data, screen):
+def extract_cells(data, screen, textures):
     cells = []
     for cell in data['Floor Layer']:
-        texture = cell['texture']
+        texture = textures[cell['texture']]
         size = (cell['width'], cell['height'])
         pos = (cell['x'], cell['y'])
         try:
@@ -28,7 +29,7 @@ def extract_cells(data, screen):
             cells.append(Cell(texture, size, pos, True))
 
     for cell in data['Collision Layer']:
-        texture = cell['texture']
+        texture = textures[cell['texture']]
         size = (cell['width'], cell['height'])
         pos = (cell['x'], cell['y'])
         try:
@@ -44,9 +45,13 @@ if __name__ == "__main__":
 
     # from dummy_cell import Cell
 
-    data = load_map("E:/Python Scripts/rpg-python/room.json")
+    # data = load_map("E:/Python Scripts/rpg-python/room_2.json")
+    data = load_map("C:/Users/andre/Desktop/maps/ell_rooms/20x13_ell.json")
+
     window = pg.display.set_mode((data['Width'], data['Height']))
-    cells = extract_cells(data, window)
+    textures = dict((v, k) for k,v in data['Textures'].items())
+
+    cells = extract_cells(data, window, textures)
 
     Go = True
     while Go:
@@ -57,6 +62,7 @@ if __name__ == "__main__":
         window.fill((0, 0, 0, 0))
         for cell in cells:
             cell.draw()
+
         pg.display.flip()
 
     pg.quit()
