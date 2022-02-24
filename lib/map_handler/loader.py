@@ -1,9 +1,7 @@
 import pygame as pg
 from pathlib import Path
 from sys import path
-import logging
 import json
-from time import perf_counter
 
 # importing from superpkg lib/
 _parentdir = Path(__file__).parent.parent.resolve()
@@ -12,12 +10,18 @@ path.insert(0, str(_parentdir))
 from cell import Cell
 
 path.remove(str(_parentdir))
+# done importing from lib
 
 def load_map(json_file):
+    """returns the data from json_file in a dictionary"""
     with open(json_file, "r") as data:
         return json.load(data)
 
-def extract_cells(data, screen, textures):
+def extract_cells(data, screen):
+    """returns a list of cell.Cell objects from data
+    screen is the pygame.Surface that the Cells get bound to
+    """
+    textures = dict((v, k) for k,v in data['Textures'].items())
     cells = []
     for cell in data['Floor Layer']:
         texture = textures[cell['texture']]
@@ -46,12 +50,12 @@ if __name__ == "__main__":
     # from dummy_cell import Cell
 
     # data = load_map("E:/Python Scripts/rpg-python/room_2.json")
-    data = load_map("C:/Users/andre/Desktop/maps/ell_rooms/20x13_ell.json")
+    data = load_map("E:/Python Scripts/rpg-python/assets/rooms/ell_rooms/20x13_ell.json")
 
     window = pg.display.set_mode((data['Width'], data['Height']))
-    textures = dict((v, k) for k,v in data['Textures'].items())
+    # textures = dict((v, k) for k,v in data['Textures'].items())
 
-    cells = extract_cells(data, window, textures)
+    cells = extract_cells(data, window)
 
     Go = True
     while Go:

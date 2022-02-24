@@ -1,4 +1,9 @@
+from ast import Mod
 import pygame as pg
+try:
+    from config import SETTINGS
+except ModuleNotFoundError:
+    from .config import SETTINGS
 
 class Cell(pg.sprite.Sprite):
     def __init__(self, world: pg.Surface, texture, size: tuple[int], 

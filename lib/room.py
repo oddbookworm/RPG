@@ -2,10 +2,7 @@ from enum import Enum, auto
 import pygame as pg
 from map_handler import loader
 from pathlib import Path
-from sys import path
 import logging
-from glob import glob
-from random import seed, choice
 try:
     from cell import Cell
     from config import SETTINGS
@@ -74,18 +71,26 @@ class Room:
         screen.blit(self.image, self.rect)
         
     def generate_rect_room(self):
+        tile_size = SETTINGS['GENERAL']['TILESIZE']
+        width_tiles = self.size[0] // tile_size
+        height_tiles = self.size[1] // tile_size
         room_dir = ''.join([str(Path(__file__).parent.parent),
                             "\\assets\\rooms\\rect_rooms\\"])
-        room = choice(glob(''.join([room_dir, "*"])))
+        room = ''.join([room_dir, f'{width_tiles}x{height_tiles}_rect.json'])
+        logging.info(f'Loaded {room} at position {self.pos}')
         data = loader.load_map(room)
         self.cells = loader.extract_cells(data, self.image)
         self.size = (data['Width'], data['Height'])
         self.resize_surface()
 
     def generate_round_room(self):
+        tile_size = SETTINGS['GENERAL']['TILESIZE']
+        width_tiles = self.size[0] // tile_size
+        height_tiles = self.size[1] // tile_size
         room_dir = ''.join([str(Path(__file__).parent.parent),
                             "\\assets\\rooms\\ell_rooms\\"])
-        room = choice(glob(''.join([room_dir, "*"])))
+        room = ''.join([room_dir, f'{width_tiles}x{height_tiles}_ell.json'])
+        logging.info(f'Loaded {room} at position {self.pos}')
         data = loader.load_map(room)
         self.cells = loader.extract_cells(data, self.image)
         self.size = (data['Width'], data['Height'])
@@ -97,7 +102,7 @@ class Room:
 if __name__ == "__main__":
     pg.init()
     screen = pg.display.set_mode((1920, 1080))
-    my_room = Room(RoomType.ROUND, (640, 320))
+    my_room = Room(RoomType.RECTANGLE, (672, 320))
     my_room.create_room(None)
 
     stop = False
