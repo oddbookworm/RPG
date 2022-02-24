@@ -2,3 +2,4 @@ __pycache__/**
 venv/**
 lib/__pycache__/**
 debug.log
+lib/map_handler/**
