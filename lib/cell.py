@@ -21,6 +21,9 @@ class Cell(pg.sprite.Sprite):
         """draws the Cell to self.world"""
         self.world.blit(self.image, self.rect)
 
+    def swap_world(self, new_world):
+        self.world = new_world
+
     def set_texture(self, new_texture):
         """sets the texture"""
         self.texture = new_texture
