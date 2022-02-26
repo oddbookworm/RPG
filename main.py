@@ -5,8 +5,10 @@ import logging
 from lib.config import SETTINGS
 from lib.utility import get_path
 from lib.player import Player
+from lib.worldspace import WorldSpace
+from lib.room import RoomType
 
-def catch_uncaught_exception(typ, value, traceback):
+def log_uncaught_exception(typ, value, traceback):
     """Use to override sys.excepthook to log uncaught exceptions"""
     logging.critical("Uncaught Exception!")
     logging.critical(f"Type: {typ}")
@@ -42,9 +44,10 @@ def event_loop():
             return False
     return True
 
-def update_screen(screen):
+def update_screen(screen, temp_space):
     """Draws whatever is supposed to be drawn to the screen."""
     screen.fill((255, 0, 0))
+    # temp_space.draw(screen)
     pg.display.flip()
 
 def main():
@@ -56,10 +59,13 @@ def main():
         screen = pg.display.set_mode(screen_size, pg.SRCALPHA, 32, pg.FULLSCREEN)
     else:
         screen = pg.display.set_mode(screen_size, pg.SRCALPHA, 32)
+
+    temp_space = WorldSpace(screen_size, (10, 10))
+    temp_space.create_room(RoomType.ROUND, screen_size, (0, 0), None)
     
     fps_log_delay = 0
     while event_loop():
-        update_screen(screen)
+        update_screen(screen, temp_space)
         clock.tick(SETTINGS['GENERAL']['FPS'])
         fps = clock.get_fps()
 
@@ -69,11 +75,11 @@ def main():
         if fps_log_delay < 10:
             fps_log_delay += 1
         elif fps < SETTINGS['GENERAL']['FPS'] * 0.8:
-            logging.info("Getting a bit too laggy here")
-            logging.info(f"fps recorded at {fps}")
+            logging.warning("Getting a bit too laggy here")
+            logging.warning(f"fps recorded at {fps}")
 
 if __name__ == "__main__":
-    sys.excepthook = catch_uncaught_exception
+    sys.excepthook = log_uncaught_exception
     pg.init()
     main()
     pg.quit()

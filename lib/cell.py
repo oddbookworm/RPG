@@ -6,15 +6,15 @@ except ModuleNotFoundError:
     from .config import SETTINGS
 
 class Cell(pg.sprite.Sprite):
-    def __init__(self, world: pg.Surface, texture, size: tuple[int], 
+    def __init__(self, screen: pg.Surface, texture, size: tuple[int], 
                 pos: tuple[int], is_walkable: bool = True):
-        """world: the pygame.Surface that this Cell is part of
+        """screen: the pygame.Surface that this Cell is part of
         texture: path to a texture file
         size: tuple of pixels (width, height)
         pos: tuple of pixel offsets from the top-left corner of surface
         """
         super().__init__()
-        self.world = world
+        self.screen = screen
         self.pos = pos
         self.size = size
         self.is_walkable = is_walkable
@@ -23,11 +23,11 @@ class Cell(pg.sprite.Sprite):
         self.set_texture(texture)
 
     def draw(self):
-        """draws the Cell to self.world"""
-        self.world.blit(self.image, self.rect)
+        """draws the Cell to self.screen"""
+        self.screen.blit(self.image, self.rect)
 
-    def swap_world(self, new_world):
-        self.world = new_world
+    def swap_world(self, new_screen):
+        self.screen = new_screen
 
     def set_texture(self, new_texture):
         """sets the texture"""

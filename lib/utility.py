@@ -6,7 +6,6 @@ try:
 except ModuleNotFoundError:
     from .errors import TupleAdditionError
 
-
 def get_path(filename):
     """This is really so that any executables created with pyinstaller can find
     appropriate resources. Any time a file is read or written, use this

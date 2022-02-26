@@ -1,6 +1,9 @@
 from enum import Enum, auto
 import pygame as pg
-from map_handler import loader
+try:
+    from map_handler import loader
+except ModuleNotFoundError:
+    from .map_handler import loader
 from pathlib import Path
 import logging
 try:
