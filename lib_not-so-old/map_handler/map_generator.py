@@ -48,8 +48,8 @@ def save_map(width, height, tile_size, cell_list, file_name):
     data["Textures"] = textures
 
     with open(file_name, "w") as settings_file:
-        # json.dump(data, settings_file, indent = 4) # use this one for readability
-        json.dump(data, settings_file) # use this one to save space
+        json.dump(data, settings_file, indent = 4) # use this one for readability
+        # json.dump(data, settings_file) # use this one to save space
 
 def save_room(tpl):
     pg.init()
@@ -66,14 +66,16 @@ def save_room(tpl):
     if style == "rect":
         for i in range(room_width_tiles):
             for j in range(room_height_tiles):
-                texture = asset_dir + "floor_1.png"
-                pos = (i * tile_size, j * tile_size)
                 size = (tile_size, tile_size)
-                cells.append(Cell(texture, size, pos, True))
+                pos = (i * tile_size, j * tile_size)
+                if not(i in [0, room_width_tiles - 1] or j in [0, room_height_tiles - 1]):
+                    texture = asset_dir + "floor_1.png"
+                    cells.append(Cell(texture, size, pos, True))
 
                 if i in [0, room_width_tiles - 1] or j in [0, room_height_tiles - 1]:
                     texture = asset_dir + "wall_1.png"
                     cells.append(Cell(texture, size, pos, False))
+
 
     if style == "ellipse":
         a = room_width_tiles / 2 * tile_size
