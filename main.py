@@ -103,7 +103,7 @@ def main():
                     get_path(".\\assets\\knight_idle_anim_f0.png"), "Andrew")
     temp_space = WorldSpace((16, 16), (0, 0))
     temp_space.create_room(screen, RoomType.RECTANGLE, (8, 8), (0, 0), None)
-    temp_space.create_room(screen, RoomType.ROUND, (8, 8), (8, 8))
+    temp_space.create_room(screen, RoomType.ROUND, (8, 8), (7, 0))
     non_walkables = pg.sprite.Group()
     temp_space.fix_overlap()
     for cell in temp_space.cells:
