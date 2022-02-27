@@ -44,7 +44,7 @@ class Player(GameCharacter):
             'down': (0, move_amt)
         }
 
-        self.pos = add_tuples(self.pos, options[direction])
+        self.pos = add_tuples([self.pos, options[direction]])
 
         if self.pos[0] < 0:
             self.pos = (0, self.pos[1])

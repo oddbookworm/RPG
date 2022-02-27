@@ -36,18 +36,57 @@ def enable_logging():
                         datefmt = datefmt)
     logging.info(f'Logging enabled at level {level}')
 
-def event_loop():
+def event_loop(player, non_walkables, directions, screen, counter = [0]):
     """Monitors all input and performs tasks based on that input."""
     for event in pg.event.get():
         if event.type == pg.QUIT:
             logging.info('Detected QUIT event, terminating program.')
             return False
+        counter = player_movement(player, event, non_walkables, directions,
+                                screen, counter)
+
+    if counter[0] % (SETTINGS['GENERAL']['FPS'] // 4) == 0:
+        for direction in directions:
+            player.move(direction, screen, non_walkables)
+    counter[0] += 1
     return True
 
-def update_screen(screen, temp_space):
+def player_movement(player, event, non_walkables, directions, screen,
+                    counter):
+    if event.type == pg.KEYDOWN:
+        if event.key == pg.K_UP:
+            player.move("up", screen, non_walkables)
+            directions.append("up")
+            counter[0] = 1
+        if event.key == pg.K_DOWN:
+            player.move("down", screen, non_walkables)
+            directions.append("down")
+            counter[0] = 1
+        if event.key == pg.K_RIGHT:
+            player.move("right", screen, non_walkables)
+            directions.append("right")
+            counter[0] = 1
+        if event.key == pg.K_LEFT:
+            player.move("left", screen, non_walkables)
+            directions.append("left")
+            counter[0] = 1
+
+    if event.type == pg.KEYUP:
+        if event.key == pg.K_UP:
+            directions.remove("up")
+        if event.key == pg.K_DOWN:
+            directions.remove("down")
+        if event.key == pg.K_RIGHT:
+            directions.remove("right")
+        if event.key == pg.K_LEFT:
+            directions.remove("left")
+    return counter
+
+def update_screen(screen, player, space):
     """Draws whatever is supposed to be drawn to the screen."""
     screen.fill((255, 0, 0))
-    temp_space.draw(screen)
+    space.draw(screen)
+    player.draw(screen)
     pg.display.flip()
 
 def main():
@@ -60,13 +99,21 @@ def main():
     else:
         screen = pg.display.set_mode(screen_size, pg.SRCALPHA, 32)
 
+    player = Player((32, 32), (32, 32),
+                    get_path(".\\assets\\knight_idle_anim_f0.png"), "Andrew")
     temp_space = WorldSpace((16, 16), (0, 0))
     temp_space.create_room(screen, RoomType.RECTANGLE, (8, 8), (0, 0), None)
     temp_space.create_room(screen, RoomType.ROUND, (8, 8), (8, 8))
+    non_walkables = pg.sprite.Group()
+    temp_space.fix_overlap()
+    for cell in temp_space.cells:
+        if not cell.is_walkable:
+            non_walkables.add(cell)
     
     fps_log_delay = 0
-    while event_loop():
-        update_screen(screen, temp_space)
+    directions = []
+    while event_loop(player, non_walkables, directions, screen):
+        update_screen(screen, player, temp_space)
         clock.tick(SETTINGS['GENERAL']['FPS'])
         fps = clock.get_fps()
 
