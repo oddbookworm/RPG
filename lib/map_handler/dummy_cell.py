@@ -1,6 +1,6 @@
-import pygame as pg
+import pygame
 
-class Cell(pg.sprite.Sprite):
+class Cell(pygame.sprite.Sprite):
     def __init__(self, tex, size: tuple[int], 
                 pos: tuple[int], is_walkable: bool = True):
         """A cell that isn't meant to be drawn
@@ -20,7 +20,7 @@ class Cell(pg.sprite.Sprite):
         """sets the texture"""
         self.texture = new_texture
         with open(self.texture, 'r') as texture:
-            self.image = pg.image.load(texture).convert_alpha()
-        self.image = pg.transform.scale(self.image, self.size)
+            self.image = pygame.image.load(texture).convert_alpha()
+        self.image = pygame.transform.scale(self.image, self.size)
         self.rect = self.image.get_rect()
         self.rect.topleft = self.pos

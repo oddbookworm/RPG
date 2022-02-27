@@ -1,7 +1,7 @@
-import pygame as pg
+import pygame
+import json
 from pathlib import Path
 from sys import path
-import json
 
 # importing from superpkg lib/
 _parentdir = Path(__file__).parent.parent.resolve()
@@ -43,30 +43,30 @@ def extract_cells(data, screen):
     return cells
 
 if __name__ == "__main__":
-    pg.init()
+    pygame.init()
     a = str(Path(__file__).parent.parent.parent.resolve())
     asset_dir = ''.join([a, "\\assets\\"])
 
     # from dummy_cell import Cell
 
-    # data = load_map("E:/Python Scripts/rpg-python/room_2.json")
-    data = load_map("E:/Python Scripts/rpg-python/assets/rooms/ell_rooms/20x13_ell.json")
+    # data = load_map("E:/Python Scripts/rpygame-python/room_2.json")
+    data = load_map("E:/Python Scripts/rpygame-python/assets/rooms/ell_rooms/20x13_ell.json")
 
-    window = pg.display.set_mode((data['Width'], data['Height']))
+    window = pygame.display.set_mode((data['Width'], data['Height']))
     # textures = dict((v, k) for k,v in data['Textures'].items())
 
     cells = extract_cells(data, window)
 
     Go = True
     while Go:
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 Go = False
 
         window.fill((0, 0, 0, 0))
         for cell in cells:
             cell.draw()
 
-        pg.display.flip()
+        pygame.display.flip()
 
-    pg.quit()
+    pygame.quit()

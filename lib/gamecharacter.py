@@ -1,4 +1,4 @@
-import pygame as pg
+import pygame
 try:
     from gameobject import GameObject
     from config import SETTINGS

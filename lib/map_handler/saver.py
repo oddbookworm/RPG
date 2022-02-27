@@ -1,8 +1,8 @@
-import pygame as pg
-from pathlib import Path
-from sys import path
+import pygame
 import logging
 import json
+from pathlib import Path
+from sys import path
 
 # importing from superpkg lib/
 _parentdir = Path(__file__).parent.parent.resolve()
@@ -47,13 +47,13 @@ def save_map(width, height, tile_size, cell_list):
 
     data["Textures"] = textures
 
-    with open("E:/Python Scripts/rpg-python/room_6.json", "w") as settings_file:
+    with open("E:/Python Scripts/rpygame-python/room_6.json", "w") as settings_file:
         json.dump(data, settings_file, indent = 4) # use this one for readability
         # json.dump(data, settings_file) # use this one to save space
 
 if __name__ == "__main__":
-    pg.init()
-    pg.display.set_mode((1,1))
+    pygame.init()
+    pygame.display.set_mode((1,1))
     a = str(Path(__file__).parent.parent.parent.resolve())
     asset_dir = ''.join([a, "\\assets\\"])
 
@@ -81,4 +81,4 @@ if __name__ == "__main__":
         save_map(width, height, tile_size, cells)
 
     save_room(40, 32, 32)
-    pg.quit()
+    pygame.quit()

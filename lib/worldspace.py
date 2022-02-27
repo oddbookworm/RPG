@@ -1,16 +1,9 @@
-from numpy import add
-import pygame as pg
-from pathlib import Path
-import logging
+import pygame
 try:
-    from cell import Cell
-    from config import SETTINGS
-    from room import Room, RoomType
+    from room import Room
     from utility import add_tuples
 except ModuleNotFoundError:
-    from .cell import Cell
-    from .config import SETTINGS
-    from .room import Room, RoomType
+    from .room import Room
     from .utility import add_tuples
 
 class WorldSpace:
@@ -33,6 +26,7 @@ class WorldSpace:
         room.create_room(seed, screen)
         self.rooms.append(room)
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface):
+        """draws the space onto screen"""
         for room in self.rooms:
             room.draw(screen)

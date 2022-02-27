@@ -1,4 +1,4 @@
-import pygame as pg
+import pygame
 import logging
 try:
     from gamecharacter import GameCharacter
@@ -20,14 +20,14 @@ class Player(GameCharacter):
         """
         super().__init__(pos, size, texture, name)
 
-    def collide(self, non_walkables: pg.sprite.Group):
+    def collide(self, non_walkables: pygame.sprite.Group):
         """returns True if Player collides with any sprite in non_walkables
         else returns False
         """
-        return pg.sprite.spritecollideany(self, non_walkables)
+        return pygame.sprite.spritecollideany(self, non_walkables)
 
-    def move(self, direction: str, world: pg.Surface,
-                non_walkables: pg.sprite.Group):
+    def move(self, direction: str, world: pygame.Surface,
+                non_walkables: pygame.sprite.Group):
         """Moves the player one tile based on direction. Does not let player
         leave the world. Also handles collision with non_walkables.
         """

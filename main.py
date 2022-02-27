@@ -1,7 +1,7 @@
 import pygame as pg
-from traceback import format_tb
 import sys
 import logging
+from traceback import format_tb
 from lib.config import SETTINGS
 from lib.utility import get_path
 from lib.player import Player
