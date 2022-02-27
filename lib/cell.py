@@ -1,4 +1,3 @@
-from ast import Mod
 import pygame as pg
 try:
     from config import SETTINGS
@@ -6,28 +5,30 @@ except ModuleNotFoundError:
     from .config import SETTINGS
 
 class Cell(pg.sprite.Sprite):
-    def __init__(self, screen: pg.Surface, texture, size: tuple[int], 
+    def __init__(self, texture, size: tuple[int], 
                 pos: tuple[int], is_walkable: bool = True):
-        """screen: the pygame.Surface that this Cell is part of
+        """world: the pygame.Surface that this Cell is part of
         texture: path to a texture file
         size: tuple of pixels (width, height)
         pos: tuple of pixel offsets from the top-left corner of surface
         """
         super().__init__()
-        self.screen = screen
-        self.pos = pos
         self.size = size
         self.is_walkable = is_walkable
         self.texture = texture
+        self.pos = pos
 
         self.set_texture(texture)
+        self.set_pos(pos)
 
-    def draw(self):
-        """draws the Cell to self.screen"""
-        self.screen.blit(self.image, self.rect)
+    def draw(self, screen):
+        """draws the Cell to self.world"""
+        screen.blit(self.image, self.rect)
 
-    def swap_world(self, new_screen):
-        self.screen = new_screen
+    def set_pos(self, new_pos):
+        self.pos = new_pos
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.pos
 
     def set_texture(self, new_texture):
         """sets the texture"""
@@ -35,5 +36,4 @@ class Cell(pg.sprite.Sprite):
         with open(self.texture, 'r') as texture:
             self.image = pg.image.load(texture).convert_alpha()
         self.image = pg.transform.scale(self.image, self.size)
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.pos
+        self.set_pos(self.pos)

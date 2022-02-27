@@ -47,7 +47,7 @@ def event_loop():
 def update_screen(screen, temp_space):
     """Draws whatever is supposed to be drawn to the screen."""
     screen.fill((255, 0, 0))
-    # temp_space.draw(screen)
+    temp_space.draw(screen)
     pg.display.flip()
 
 def main():
@@ -60,8 +60,9 @@ def main():
     else:
         screen = pg.display.set_mode(screen_size, pg.SRCALPHA, 32)
 
-    temp_space = WorldSpace(screen_size, (10, 10))
-    temp_space.create_room(RoomType.ROUND, screen_size, (0, 0), None)
+    temp_space = WorldSpace((16, 16), (0, 0))
+    temp_space.create_room(screen, RoomType.RECTANGLE, (8, 8), (0, 0), None)
+    temp_space.create_room(screen, RoomType.ROUND, (8, 8), (8, 8))
     
     fps_log_delay = 0
     while event_loop():

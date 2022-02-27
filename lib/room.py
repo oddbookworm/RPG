@@ -9,9 +9,11 @@ import logging
 try:
     from cell import Cell
     from config import SETTINGS
+    from utility import add_tuples
 except ModuleNotFoundError:
     from .cell import Cell
     from .config import SETTINGS
+    from .utility import add_tuples
 
 class AutoName(Enum):
     """Meant to be subclassed
@@ -29,84 +31,82 @@ class RoomType(AutoName):
     CUSTOM = auto()
 
 class Room:
-    def __init__(self, room_type: RoomType, size: tuple[int], pos: tuple[int] = (0, 0)):
+    def __init__(self, room_type: RoomType, size: tuple[int],
+                pos: tuple[int] = (0, 0)):
         """room_type: one of the values from the RoomType Enum
-        size: tuple of pixels (width, height)
-        pos: tuple of pixels (x, y) offset from the Surface being drawn onto
+        size: tuple of cells (width, height)
+        pos: tuple of cells (x, y) offset from the Surface being drawn onto
         """
         self.room_type = room_type
         self.size = size
         self.pos = pos
         self.cells = []
-        self.create_surface()
+        self.__generated = False
 
-    def create_surface(self):
-        self.image = pg.Surface(self.size, pg.SRCALPHA, 32).convert_alpha()
-        self.image.fill((0, 0, 0, 0))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.pos
-    
-    def resize_surface(self):
-        self.image = pg.transform.scale(self.image, self.size)
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.pos
-        for cell in self.cells:
-            cell.swap_world(self.image)
-
-    def create_room(self, seed):
+    def create_room(self, seed, screen):
         """floor_texture: path to a texture
         tile_size: int of tile size
         seed: used to generate a random room
         """
-        self.seed = seed
-        if self.room_type == RoomType.RECTANGLE:
-            self.generate_rect_room()
-        
-        if self.room_type == RoomType.ROUND:
-            self.generate_round_room()
+        if not self.__generated:
+            self.seed = seed
+            if self.room_type == RoomType.RECTANGLE:
+                self.generate_rect_room(screen)
+            
+            if self.room_type == RoomType.ROUND:
+                self.generate_round_room(screen)
 
-        if self.room_type == RoomType.RANDOM:
-            self.generate_random_room()
+            if self.room_type == RoomType.RANDOM:
+                self.generate_random_room(screen)
+
+            self.__generated = True
+        
+        else:
+            print(f"Room already generated of type {self.room_type}")
 
     def draw(self, screen):
         for cell in self.cells:
-            cell.draw()
-        screen.blit(self.image, self.rect)
+            cell.draw(screen)
         
-    def generate_rect_room(self):
-        tile_size = SETTINGS['GENERAL']['TILESIZE']
-        width_tiles = self.size[0] // tile_size
-        height_tiles = self.size[1] // tile_size
+    def generate_rect_room(self, screen):
+        width_tiles = self.size[0]
+        height_tiles = self.size[1]
         room_dir = ''.join([str(Path(__file__).parent.parent),
                             "\\assets\\rooms\\rect_rooms\\"])
         room = ''.join([room_dir, f'{width_tiles}x{height_tiles}_rect.json'])
         logging.info(f'Loaded {room} at position {self.pos}')
         data = loader.load_map(room)
-        self.cells = loader.extract_cells(data, self.image)
+        self.cells = loader.extract_cells(data, screen)
         self.size = (data['Width'], data['Height'])
-        self.resize_surface()
+        self.offset_cells()
 
-    def generate_round_room(self):
-        tile_size = SETTINGS['GENERAL']['TILESIZE']
-        width_tiles = self.size[0] // tile_size
-        height_tiles = self.size[1] // tile_size
+    def generate_round_room(self, screen):
+        width_tiles = self.size[0]
+        height_tiles = self.size[1]
         room_dir = ''.join([str(Path(__file__).parent.parent),
                             "\\assets\\rooms\\ell_rooms\\"])
         room = ''.join([room_dir, f'{width_tiles}x{height_tiles}_ell.json'])
         logging.info(f'Loaded {room} at position {self.pos}')
         data = loader.load_map(room)
-        self.cells = loader.extract_cells(data, self.image)
+        self.cells = loader.extract_cells(data, screen)
         self.size = (data['Width'], data['Height'])
-        self.resize_surface()
+        self.offset_cells()
 
-    def generate_random_room(self):
+    def generate_random_room(self, screen):
         pass
+
+    def offset_cells(self):
+        for cell in self.cells:
+            tile_size = SETTINGS['GENERAL']['TILESIZE']
+            pos_pixels = (self.pos[0] * tile_size, self.pos[1] * tile_size)
+            proper_pos = add_tuples([cell.pos, pos_pixels])
+            cell.set_pos(proper_pos)
 
 if __name__ == "__main__":
     pg.init()
     screen = pg.display.set_mode((1920, 1080))
-    my_room = Room(RoomType.RECTANGLE, (672, 320))
-    my_room.create_room(None)
+    my_room = Room(RoomType.RECTANGLE, (672, 320), (100, 50))
+    my_room.create_room(None, screen)
 
     stop = False
     while not stop:
