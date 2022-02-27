@@ -5,7 +5,7 @@ try:
 except ModuleNotFoundError:
     from .utility import get_path
 
-""" this script loads SETTINGS into the global scope by reading "settings.json"
+"""This script loads SETTINGS into the global scope by reading "settings.json"
 if it exists, otherwise, creates it and loads default settings"""
 if path.isfile(get_path("settings.json")):
     with open(get_path("settings.json"), "r") as settings_file:
