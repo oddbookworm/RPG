@@ -1,4 +1,5 @@
 import pygame
+import logging
 try:
     from room import Room
     from utility import add_tuples
@@ -41,14 +42,22 @@ class WorldSpace:
             cell.draw(screen)
 
     def fix_overlap(self):
+        if logging.getLogger().hasHandlers():
+            logging.debug("Looking for conflicts between floors and walls")
         for cell in self.cells:
             for test_cell in self.cells:
                 if cell != test_cell:
                     if cell.pos == test_cell.pos:
                         if not cell.is_walkable:
                             self.cells.remove(cell)
+                            if logging.getLogger().hasHandlers():
+                                logging.debug(f"Removed a wall from {cell.pos}")
                         elif not test_cell.is_walkable:
                             self.cells.remove(test_cell)
+                            if logging.getLogger().hasHandlers():
+                                logging.debug(f"Removed a wall from {cell.pos}")
+        if logging.getLogger().hasHandlers():
+            logging.debug("Finished with conflict resolution")
     
     def fill_walls(self):
         from copy import deepcopy
