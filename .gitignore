@@ -4,3 +4,4 @@ lib/__pycache__/**
 debug.log
 map_editor/**
 assets/rooms/**
+lib/map_handler/**
