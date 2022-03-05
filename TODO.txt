@@ -1,0 +1,11 @@
+=============== ON HOLD =====================================================================
+Create script that will automatically pregen basic rooms if not present -> may not do
+Make pregenerated rooms agnostic from my own file paths by tweaking lib/map_handler/loader.py
+Work on a sample chest
+Incorporate tile-specific data into the .json files that govern a pregenerated room
+=============================================================================================
+Work on generic round/rectangular room generation rather than loading from file -> in progress
+Separate dungeons from non-dungeon worldspaces -> in progress
+Make camera moveable
+Work on random rooms
+Generate hallways
