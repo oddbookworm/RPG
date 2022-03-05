@@ -77,9 +77,18 @@ class Room:
         room = ''.join([room_dir, f'{width_tiles}x{height_tiles}_rect.json'])
         if logging.getLogger().hasHandlers():
             logging.info(f'Loaded {room} at position {self.pos}')
-        data = loader.load_map(room)
-        self.cells = loader.extract_cells(data, screen)
-        self.size = (data['Width'], data['Height'])
+        # data = loader.load_map(room)
+        # self.cells = loader.extract_cells(data, screen)
+        # self.size = (data['Width'], data['Height'])
+
+        for row in range(self.size[1]):
+            for col in range(self.size[0]):
+                if row in [0, self.size[1] - 1] or col in [0, self.size[0] - 1]:
+                    pass #wall
+
+                else:
+                    pass #floor
+
         self.offset_cells()
 
     def __generate_round_room(self, screen) -> None:
