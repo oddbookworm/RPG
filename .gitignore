@@ -3,5 +3,6 @@ venv/**
 lib/__pycache__/**
 debug.log
 map_editor/**
-assets/rooms/**
+assets/rooms/ell_rooms/**
+assets/rooms/rect_rooms/**
 lib/map_handler/**
