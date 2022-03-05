@@ -1,12 +1,15 @@
 import pygame as pg
+from traceback import format_tb
+from os.path import isdir
 import sys
 import logging
-from traceback import format_tb
 from lib.config import SETTINGS
 from lib.utility import get_path
 from lib.player import Player
 from lib.worldspace import WorldSpace
 from lib.room import RoomType
+from lib.map_handler.basic_generator import create_files
+from lib.dungeon import Dungeon
 
 def log_uncaught_exception(typ, value, traceback):
     """Use to override sys.excepthook to log uncaught exceptions"""
@@ -91,9 +94,11 @@ def update_screen(screen, player, space):
 
 def main():
     """Main loop that runs the whole program"""
+    # create_files(get_path(".\\assets\\rooms"))
     clock = pg.time.Clock()
     enable_logging()
     screen_size = (SETTINGS['GENERAL']['WIDTH'], SETTINGS['GENERAL']['HEIGHT'])
+    tile_size = SETTINGS['GENERAL']['TILESIZE']
     if SETTINGS['GENERAL']['FULLSCREEN']:
         screen = pg.display.set_mode(screen_size, pg.SRCALPHA, 32, pg.FULLSCREEN)
     else:
@@ -101,9 +106,18 @@ def main():
 
     player = Player((32, 32), (32, 32),
                     get_path(".\\assets\\knight_idle_anim_f0.png"), "Andrew")
-    temp_space = WorldSpace((16, 16), (0, 0))
-    temp_space.create_room(screen, RoomType.RECTANGLE, (8, 8), (0, 0), None)
-    temp_space.create_room(screen, RoomType.ROUND, (8, 8), (7, 0))
+    # temp_space = WorldSpace((16, 16), (0, 0))
+    # temp_space.create_room(screen, RoomType.RECTANGLE, (8, 8), (0, 0), None)
+    # temp_space.create_room(screen, RoomType.ROUND, (8, 8), (7, 0))
+    temp_space = WorldSpace((screen_size[0] // tile_size, 
+                            screen_size[1] // tile_size), (0, 0))
+    # for row in range(0, screen_size[1] // tile_size, 8):
+    #     for col in range(0, screen_size[0] // tile_size, 18):
+    #         temp_space.create_room(screen, RoomType.ROUND, (18, 8), (col, row))
+    temp_dungeon = Dungeon((1, 1), (0, 0), {
+        'wall': "assets/wall_1.png",
+        'floor': 'assets/floor_1.png'
+    })
     non_walkables = pg.sprite.Group()
     temp_space.fix_overlap()
     for cell in temp_space.cells:
